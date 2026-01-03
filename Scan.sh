@@ -14,18 +14,13 @@ trap ctrl_c INT
 
 function ctrl_c(){
    
-    echo -e "\n\n${redColour}[!] Exiting...${endColour}"
+    echo -e "\n\n${redColour}[!] Saliendo...${endColour}"
     
   exit 1
 }
 
 #Variables
-
-ip=$(hostname -I | awk '{print $1}')
-
-network=$(echo "$ip" | cut -d '.' -f1-3)
-
-
+ip=$(hostname -I | awk '{print $1}' | cut -d '.' -f1-3)
 
 if [ "$(id -u)" -eq "0" ]; then
 
@@ -37,14 +32,14 @@ echo -e "${yellowColour}Ejecutando script...${endColour}"
 
 for i in {1..255}; do
 
-timeout 0.5 bash -c "ping -c 1 $network.$i" >/dev/null 2>&1
+timeout 0.5 bash -c "ping -c 1 $ip.$i" >/dev/null 2>&1
 
 
 if [ $? -eq 0 ]; then
 
-echo -e "${greenColour}El host 192.168.18.$i esta activo${endColour}"
+echo -e "${greenColour}El host $ip.$i esta activo${endColour}"
 
-    timeout 0.5 bash -c "nmap -p- --open --min-rate 5000 -n -sS -vvv $network.$i | grep 'open'" 2>/dev/null
+    timeout 0.5 bash -c "nmap -p- --open --min-rate 5000 -n -sS -vvv $ip.$i | grep 'open'" 2>/dev/null
 
 fi
 
